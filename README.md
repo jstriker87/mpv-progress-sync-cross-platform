@@ -11,8 +11,10 @@ A cross platform script to save a files position when using mpv or mpv android a
 - This also means that saving the location across devices will not work (due to the hashing process mpv uses to store the file location and name)
 
 - This script solves this problem by only using the filename being opened 
-- The script hashes the names of the files being opened using md5 so the names of the saved location files are private
+- The script stores the names of the files being opened using a hashing process so the names of the saved location files are private
 - You can synchronise your different devices folders that store your media files progress in mpv that store your save positions using sync services such as [Syncthing](https://syncthing.net/)
+    - This allows you to sync your progress of a media file in mpv very easily
+
 ## Requirements
 - mpv or mpv-android
 
@@ -24,13 +26,13 @@ A cross platform script to save a files position when using mpv or mpv android a
 - Windows
 
 ### Save location
-- You can specify the location of where the save positions of files are stored by editing the locations in 'saveposition.lua' below
-    - linux_folder
-    - windows_folder
-    - android_folder
+- The script should work without any changes, however you can specify the location of where the save positions of files are stored by editing the locations in 'saveposition.lua' below
+    - linux_mac_folder (default: /home/USERNAME/Documents/mpv-positions)
+    - windows_folder (default: C:\Users\USERNAME\Documents\mpv-positions)
+    - android_folder (default: /storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/)
 
-### Linux
-Copy all lua files to  /home/username/.config/mpv/scripts
+### Linux or Mac
+Copy all lua files to  /home/USERNAME/.config/mpv/scripts
 
 ### Android 
 - NOTE: Since Android version 12 Google has restricted access to the data folder where the files need to be placed so please see the guide below
@@ -57,10 +59,11 @@ Copy all lua files to  /home/username/.config/mpv/scripts
 - Then in the Files app open the Android folder
 - You should now be able to see the 'data' folder
 - Drag each Lua file from the 'Android' folder into data->is.xyz.mpv->files->.config->mpv->scripts
+- [General video tutorial of using the Files app with the data folder](https://www.youtube.com/watch?v=HGzRx_HxrmQ)
 
 - Open mpv-android
     - Press back button once
-    - Go to Settings->Advanced - edit mpv.conf
+    - Go to Settings -> Advanced -> edit mpv.conf
     - add the following: script="/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/saveposition.lua"
 
 #### Installation guide (Rooted)
@@ -69,7 +72,6 @@ Copy all lua files to  /home/username/.config/mpv/scripts
     - Press back button once
     - Go to Settings->Advanced - edit mpv.conf
     - add the following: script="/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/saveposition.lua"
-
 
 ### Windows
 - Note: mpv can be installed in a number of different ways
@@ -88,8 +90,6 @@ Copy all lua files to  /home/username/.config/mpv/scripts
     - dkjson_file
     - md5_file
     - The location of the mpv scripts folder when installing manually is normally: C:\Users\USERNAME\AppData\Roaming\mpv\scripts\ 
-
-
 
 ## Dependencies / Acknowledgements
 This project uses [**md5.lua**](https://github.com/kikito/md5.lua) by [@kikito](https://github.com/kikito), a pure Lua implementation of the MD5 message-digest algorithm.

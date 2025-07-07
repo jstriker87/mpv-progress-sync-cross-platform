@@ -12,10 +12,10 @@ mp.register_event("file-loaded", function()
     filename = string.gsub(filename, "[^%w%.%-_]", "_")
     duration = mp.get_property_number("duration")
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
-        linux_folder = os.getenv("HOME") .. "/Documents/mpv-positions/"
+        linux_mac_folder = os.getenv("HOME") .. "/Documents/mpv-positions/"
         dkjson_file = os.getenv("HOME") .. '/.config/mpv/scripts/dkjson.lua'
         dkjson = loadfile(dkjson_file)()
-        folder = linux_folder
+        folder = linux_mac_folder
     end
     if myos == "Android" or myos == "Toybox" then
         android_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
