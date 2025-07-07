@@ -4,7 +4,6 @@ duration = 0
 position = 0
 dkjson = nil
 isPlaying = true
-md5 = nil
 
 
 mp.register_event("file-loaded", function()
@@ -24,7 +23,9 @@ mp.register_event("file-loaded", function()
         folder = android_folder
     end
     if myos == "Windows" then
-        windows_folder = ""
+		dkjson_file = os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\dkjson.lua'
+        dkjson = loadfile(dkjson_file)()
+        windows_folder = os.getenv("USERPROFILE") .. '\\Documents\\mpv-positions\\'
         folder = windows_folder
     end
     filepath = folder .. filename .. ".json"
@@ -54,7 +55,13 @@ end)
 mp.register_event("shutdown", function()
     isPlaying = false
     filename = string.gsub(filename, "[^%w%.%-_]", "_")
-    os.execute("mkdir -p " .. folder)
+	myos = getOS()
+	
+	if myos == "Windows" then
+		os.execute("mkdir" .. folder)
+	else
+		os.execute("mkdir -p " .. folder)
+	end
     filepath = folder .. filename .. ".json"
     positionFile, err = io.open(filepath, "w")
     if not positionFile then
@@ -78,14 +85,16 @@ end)
 function getFilename(myos)
     md5 = nil
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
-        print("Mac")
-        print(os.getenv("HOME") .. '/.config/mpv/scripts/md5.lua')
         md5_file = os.getenv("HOME") .. '/.config/mpv/scripts/md5.lua'
         md5 = loadfile(md5_file)()
     end
     if myos == "Android" or myos == "Toybox" then
         md5 = loadfile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/md5.lua')()
     end
+	if myos == "Windows" then
+		md5_file = os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\md5.lua'
+        md5 = loadfile(md5_file)()
+	end
 
     title = mp.get_property("media-title")
     local file_format = mp.get_property("file-format")
