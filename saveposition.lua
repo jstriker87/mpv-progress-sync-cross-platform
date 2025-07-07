@@ -4,6 +4,7 @@ duration = 0
 position = 0
 dkjson = nil
 isPlaying = true
+md5 = nil
 
 
 mp.register_event("file-loaded", function()
@@ -76,19 +77,28 @@ mp.register_event("shutdown", function()
 end)
 
 
-function getFilename(os)
-    local title = mp.get_property("media-title")
+function getFilename(myos)
+    md5 = nil
+    if myos == 'GNU/Linux' or os == 'OSX' or os =='Darwin' then
+        md5_file = os.getenv( "HOME" ) .. '/.config/mpv/scripts/md5.lua'
+        md5  = loadfile(md5_file)()
+    end
+    if myos == "Android" or myos == "Toybox" then
+        md5 = loadfile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/md5.lua')()
+    end
+
+    title = mp.get_property("media-title")
     local file_format = mp.get_property("file-format")
     if string.find(file_format, "mp4") then
         file_format = ".mp4"
     end
-    local final_filename = title .. file_format
-    return final_filename
+    local title = title .. file_format
+    title = md5.sumhexa(title) 
+    return title
 end
 
 function getOS()
 	if jit then
-        print(jit.os)
 		return jit.os
 	end
 

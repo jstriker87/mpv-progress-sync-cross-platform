@@ -2,13 +2,18 @@
 
 A cross platform script to save a files position when using mpv or mpv android across devices
 
+### Windows support coming soon
+
 ## Features
 - Easy-to-use script with minimal dependencies
 ## Requirements
-
 - mpv or mpv-android
 
 ## 🚀 Usage
+
+- This script currently works on:
+- Linux
+- Android
 
 ### Save location
 - You can specify the location of where the save positions of files are stored by editing the locations in 'saveposition.lua' below
