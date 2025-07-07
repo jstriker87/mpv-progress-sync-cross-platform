@@ -1,18 +1,9 @@
-# mpv-save-position
-A cross platform script to save a files position when using mpv or mpv android
-
-
 # [mpv Save Position]
 
-A cross platform script to save a files position when using mpv or mpv android cross devices
-A simple utility that uses MD5 hashing to process filenames (or other strings) for purposes like caching, unique identification, or obfuscation.
+A cross platform script to save a files position when using mpv or mpv android across devices
 
 ## Features
-
-- Generate MD5 hashes from filenames or strings
 - Easy-to-use script with minimal dependencies
-- Useful for cache keys, data deduplication, or anonymized identifiers
-
 ## Requirements
 
 - mpv or mpv-android
@@ -66,3 +57,7 @@ Copy all lua files to  /home/username/.config/mpv/scripts
 This project uses [**md5.lua**](https://github.com/kikito/md5.lua) by [@kikito](https://github.com/kikito), a pure Lua implementation of the MD5 message-digest algorithm.
 > md5.lua is licensed under the MIT License.  
 > https://github.com/kikito/md5.lua
+
+This project uses [**dkjson.lua**](https://github.com/LuaDist/dkjson) from [@](https://github.com/LuaDist), a Lua module for encoding and decoding JSON data. 
+> ddkjson.lua is licensed under the MIT License.  
+> https://github.com/LuaDist/dkjson
