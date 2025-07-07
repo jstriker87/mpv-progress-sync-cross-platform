@@ -8,14 +8,13 @@ md5 = nil
 
 
 mp.register_event("file-loaded", function()
-
     myos = getOS()
     filename = getFilename(myos)
     filename = string.gsub(filename, "[^%w%.%-_]", "_")
     duration = mp.get_property_number("duration")
-    if myos == 'GNU/Linux' or os == 'OSX' or os =='Darwin' then
+    if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
         linux_folder = os.getenv("HOME") .. "/Documents/mpv-positions/"
-        dkjson_file = os.getenv( "HOME" ) .. '/.config/mpv/scripts/dkjson.lua'
+        dkjson_file = os.getenv("HOME") .. '/.config/mpv/scripts/dkjson.lua'
         dkjson = loadfile(dkjson_file)()
         folder = linux_folder
     end
@@ -43,7 +42,6 @@ mp.register_event("file-loaded", function()
         mp.commandv("seek", data.loc, "absolute+exact")
         positionFile:close()
     end
-    
 end)
 
 
@@ -79,9 +77,11 @@ end)
 
 function getFilename(myos)
     md5 = nil
-    if myos == 'GNU/Linux' or os == 'OSX' or os =='Darwin' then
-        md5_file = os.getenv( "HOME" ) .. '/.config/mpv/scripts/md5.lua'
-        md5  = loadfile(md5_file)()
+    if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
+        print("Mac")
+        print(os.getenv("HOME") .. '/.config/mpv/scripts/md5.lua')
+        md5_file = os.getenv("HOME") .. '/.config/mpv/scripts/md5.lua'
+        md5 = loadfile(md5_file)()
     end
     if myos == "Android" or myos == "Toybox" then
         md5 = loadfile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/md5.lua')()
@@ -93,19 +93,19 @@ function getFilename(myos)
         file_format = ".mp4"
     end
     local title = title .. file_format
-    title = md5.sumhexa(title) 
+    title = md5.sumhexa(title)
     return title
 end
 
 function getOS()
-	if jit then
-		return jit.os
-	end
+    if jit then
+        return jit.os
+    end
 
-	local fh,err = assert(io.popen("uname -o 2>/dev/null","r"))
-	if fh then
-		osname = fh:read()
-	end
+    local fh, err = assert(io.popen("uname -o 2>/dev/null", "r"))
+    if fh then
+        osname = fh:read()
+    end
 
     myos = osname or "Windows"
     return myos
