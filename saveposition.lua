@@ -2,29 +2,46 @@ filepath = ''
 folder = ''
 duration = 0
 position = 0
-dkjson = nil
 isPlaying = true
---lunajson = loadFile(os.getenv("HOME") .. '/.config/mpv/scripts/lunajson/lunajson.lua')
-
+encode = nil
 mp.register_event("file-loaded", function()
+
+    decode = nil
     myos = getOS()
     filename = getFilename(myos)
     filename = string.gsub(filename, "[^%w%.%-_]", "_")
     duration = mp.get_property_number("duration")
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
-        linux_mac_folder = os.getenv("HOME") .. "/Documents/mpv-positions/"
-        dkjson = loadFile(os.getenv("HOME") .. '/.config/mpv/scripts/dkjson.lua')
-        folder = linux_mac_folder
+        linux_mac_position_folder = os.getenv("HOME") .. "/Documents/mpv-positions/"
+        decoder_file = os.getenv("HOME") .. '/.config/mpv/scripts/lib/decoder.lua'
+        newdecoder = loadfile(decoder_file)()
+        decode = newdecoder()
+        encoder_file = os.getenv("HOME") .. '/.config/mpv/scripts/lib/encoder.lua'
+        newencoder = loadfile(encoder_file)()
+        encode = newencoder()
+        folder = linux_mac_position_folder
     end
     if myos == "Android" or myos == "Toybox" then
-        android_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
-        dkjson = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/dkjson.lua')
-        folder = android_folder
+        android_position_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
+        decoder_file = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/decoder.lua')
+        newdecoder = loadfile(decoder_file)()
+        decode = newdecoder()
+        encoder_file = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/encoder.lua')
+        newencoder = loadfile(encoder_file)()
+        encode = newencoder()
+        folder = android_position_folder
     end
     if myos == "Windows" then
-		dkjson = loadFile(os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\dkjson.lua')
-        windows_folder = os.getenv("USERPROFILE") .. '\\Documents\\mpv-positions\\'
-        folder = windows_folder
+        windows_position_folder = os.getenv("USERPROFILE") .. '\\Documents\\mpv-positions\\'
+        folder = windows_position_folder
+		windows_script_folder = os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\lib\\'
+        decoder_file = loadFile(windows_script_folder .. "decoder.lua")
+        newdecoder = loadfile(decoder_file)()
+        decode = newdecoder()
+        encoder_file = loadFile(windows_script_folder .. "encoder.lua")
+        newencoder = loadfile(encoder_file)()
+        encode = newencoder()
+
     end
     filepath = folder .. filename .. ".json"
     filepath = folder .. filename .. ".json"
@@ -35,8 +52,7 @@ mp.register_event("file-loaded", function()
         return
     else
         local content, err = positionFile:read("*all")
-        --local data = lunajson.decode(content)
-        local data, pos, err = dkjson.decode(content, 1, nil)
+        local data = decode(content)
         if err then
             mp.osd_message(err .. " when opening the file " .. filepath .. ". Try deleting the file", "8")
 
@@ -81,8 +97,7 @@ mp.register_event("shutdown", function()
         local data = {
             loc = position
         }
-        local str = dkjson.encode(data, { indent = true })
-        --local str = lunajson.encode(data)
+        local str = encode(data)
         positionFile:write(str)
         positionFile:close()
     end
@@ -90,21 +105,19 @@ end)
 
 
 function loadFile(path)
-    print(path)
     return assert(loadfile(path))()
 end
 
 function getFilename(myos)
     md5 = nil
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
-        md5 = loadFile(os.getenv("HOME") .. '/.config/mpv/scripts/md5.lua')
-        print(md5)
+        md5 = loadFile(os.getenv("HOME") .. '/.config/mpv/scripts/lib/md5.lua')
     end
     if myos == "Android" or myos == "Toybox" then
-        md5 = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/md5.lua')
+        md5 = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/md5.lua')
     end
 	if myos == "Windows" then
-		md5_= loadFile(os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\md5.lua')
+		md5_= loadFile(os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\lib\\md5.lua')
 	end
 
     title = mp.get_property("media-title")
@@ -130,3 +143,4 @@ function getOS()
     myos = osname or "Windows"
     return myos
 end
+

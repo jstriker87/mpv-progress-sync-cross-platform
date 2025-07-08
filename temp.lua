@@ -1,7 +1,0 @@
-local lunajson = require("lunajson/lunajson")
-local positionFile, err = io.open("test.json", "r")
-local content, err = positionFile:read("*all")
-local obj = lunajson.decode(content)
-local obj2 = lunajson.encode(obj)
-print(obj.loc)
-print(obj2)
