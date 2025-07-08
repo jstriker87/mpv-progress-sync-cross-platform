@@ -5,7 +5,6 @@ position = 0
 dkjson = nil
 isPlaying = true
 
-
 mp.register_event("file-loaded", function()
     myos = getOS()
     filename = getFilename(myos)
@@ -50,40 +49,40 @@ end)
 
 timer = mp.add_periodic_timer(1, function()
     if isPlaying then
-        cur_position = mp.get_property_number("time-pos")
-        if cur_position ~= nil then
-            position = cur_position
-        end
+        position = mp.get_property_number("time-pos")
     end
 end)
 
 mp.register_event("shutdown", function()
     isPlaying = false
-    filename = string.gsub(filename, "[^%w%.%-_]", "_")
-	myos = getOS()
-	
-	if myos == "Windows" then
-		os.execute("mkdir" .. folder)
-	else
-		os.execute("mkdir -p " .. folder)
-	end
-    filepath = folder .. filename .. ".json"
-    positionFile, err = io.open(filepath, "w")
-    if not positionFile then
-        print("Error opening file to write:", err)
-        return
-    end
 
-    local finalPosition = duration - position
-    if finalPosition <= 5 then
-        position = 0
+    if position ~= nil and position > 2 then
+        filename = string.gsub(filename, "[^%w%.%-_]", "_")
+        myos = getOS()
+        
+        if myos == "Windows" then
+            os.execute("mkdir" .. folder)
+        else
+            os.execute("mkdir -p " .. folder)
+        end
+        filepath = folder .. filename .. ".json"
+        positionFile, err = io.open(filepath, "w")
+        if not positionFile then
+            print("Error opening file to write:", err)
+            return
+        end
+
+        local finalPosition = duration - position
+        if finalPosition <= 5 then
+            position = 0
+        end
+        local data = {
+            loc = position
+        }
+        local str = dkjson.encode(data, { indent = true })
+        positionFile:write(str)
+        positionFile:close()
     end
-    local data = {
-        loc = position
-    }
-    local str = dkjson.encode(data, { indent = true })
-    positionFile:write(str)
-    positionFile:close()
 end)
 
 
