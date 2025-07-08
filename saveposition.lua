@@ -38,6 +38,8 @@ mp.register_event("file-loaded", function()
         local content, err = positionFile:read("*all")
         local data, pos, err = dkjson.decode(content, 1, nil)
         if err then
+            mp.osd_message(err .. " when opening the file " .. filepath .. ". Try deleting the file", "8")
+
             print(err)
         end
         mp.commandv("seek", data.loc, "absolute+exact")
@@ -48,7 +50,10 @@ end)
 
 timer = mp.add_periodic_timer(1, function()
     if isPlaying then
-        position = mp.get_property_number("time-pos")
+        cur_position = mp.get_property_number("time-pos")
+        if cur_position ~= nil then
+            position = cur_position
+        end
     end
 end)
 
