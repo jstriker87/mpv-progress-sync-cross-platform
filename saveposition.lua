@@ -5,7 +5,6 @@ position = 0
 dkjson = nil
 isPlaying = true
 
-
 mp.register_event("file-loaded", function()
     myos = getOS()
     filename = getFilename(myos)
@@ -51,7 +50,7 @@ end)
 timer = mp.add_periodic_timer(1, function()
     if isPlaying then
         cur_position = mp.get_property_number("time-pos")
-        if cur_position ~= nil then
+        if cur_position ~= nil and cur_position ~= 0 then
             position = cur_position
         end
     end
