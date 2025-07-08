@@ -4,6 +4,7 @@ duration = 0
 position = 0
 dkjson = nil
 isPlaying = true
+--lunajson = loadFile(os.getenv("HOME") .. '/.config/mpv/scripts/lunajson/lunajson.lua')
 
 mp.register_event("file-loaded", function()
     myos = getOS()
@@ -12,29 +13,29 @@ mp.register_event("file-loaded", function()
     duration = mp.get_property_number("duration")
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
         linux_mac_folder = os.getenv("HOME") .. "/Documents/mpv-positions/"
-        dkjson_file = os.getenv("HOME") .. '/.config/mpv/scripts/dkjson.lua'
-        dkjson = loadfile(dkjson_file)()
+        dkjson = loadFile(os.getenv("HOME") .. '/.config/mpv/scripts/dkjson.lua')
         folder = linux_mac_folder
     end
     if myos == "Android" or myos == "Toybox" then
         android_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
-        dkjson = loadfile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/dkjson.lua')()
+        dkjson = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/dkjson.lua')
         folder = android_folder
     end
     if myos == "Windows" then
-		dkjson_file = os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\dkjson.lua'
-        dkjson = loadfile(dkjson_file)()
+		dkjson = loadFile(os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\dkjson.lua')
         windows_folder = os.getenv("USERPROFILE") .. '\\Documents\\mpv-positions\\'
         folder = windows_folder
     end
     filepath = folder .. filename .. ".json"
     filepath = folder .. filename .. ".json"
     local positionFile, err = io.open(filepath, "r")
+
     if not positionFile then
         print("Could not open position file for reading:", err)
         return
     else
         local content, err = positionFile:read("*all")
+        --local data = lunajson.decode(content)
         local data, pos, err = dkjson.decode(content, 1, nil)
         if err then
             mp.osd_message(err .. " when opening the file " .. filepath .. ". Try deleting the file", "8")
@@ -54,6 +55,7 @@ timer = mp.add_periodic_timer(1, function()
 end)
 
 mp.register_event("shutdown", function()
+
     isPlaying = false
 
     if position ~= nil and position > 2 then
@@ -80,24 +82,29 @@ mp.register_event("shutdown", function()
             loc = position
         }
         local str = dkjson.encode(data, { indent = true })
+        --local str = lunajson.encode(data)
         positionFile:write(str)
         positionFile:close()
     end
 end)
 
 
+function loadFile(path)
+    print(path)
+    return assert(loadfile(path))()
+end
+
 function getFilename(myos)
     md5 = nil
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
-        md5_file = os.getenv("HOME") .. '/.config/mpv/scripts/md5.lua'
-        md5 = loadfile(md5_file)()
+        md5 = loadFile(os.getenv("HOME") .. '/.config/mpv/scripts/md5.lua')
+        print(md5)
     end
     if myos == "Android" or myos == "Toybox" then
-        md5 = loadfile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/md5.lua')()
+        md5 = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/md5.lua')
     end
 	if myos == "Windows" then
-		md5_file = os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\md5.lua'
-        md5 = loadfile(md5_file)()
+		md5_= loadFile(os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\md5.lua')
 	end
 
     title = mp.get_property("media-title")
