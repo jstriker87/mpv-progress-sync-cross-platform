@@ -2,40 +2,56 @@ filepath = ''
 folder = ''
 duration = 0
 position = 0
-dkjson = nil
 isPlaying = true
-
+encode = nil
 mp.register_event("file-loaded", function()
+    decode = nil
     myos = getOS()
     filename = getFilename(myos)
     filename = string.gsub(filename, "[^%w%.%-_]", "_")
     duration = mp.get_property_number("duration")
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
-        linux_mac_folder = os.getenv("HOME") .. "/Documents/mpv-positions/"
-        dkjson_file = os.getenv("HOME") .. '/.config/mpv/scripts/dkjson.lua'
-        dkjson = loadfile(dkjson_file)()
-        folder = linux_mac_folder
+        linux_mac_position_folder = os.getenv("HOME") .. "/Documents/mpv-positions/"
+        decoder_file = os.getenv("HOME") .. '/.config/mpv/scripts/lib/decoder.lua'
+        newdecoder = loadfile(decoder_file)()
+        decode = newdecoder()
+        encoder_file = os.getenv("HOME") .. '/.config/mpv/scripts/lib/encoder.lua'
+        newencoder = loadfile(encoder_file)()
+        encode = newencoder()
+        folder = linux_mac_position_folder
     end
     if myos == "Android" or myos == "Toybox" then
-        android_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
-        dkjson = loadfile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/dkjson.lua')()
-        folder = android_folder
+        android_position_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
+        decoder_file = '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/decoder.lua'
+        newdecoder = loadfile(decoder_file)()
+        decode = newdecoder()
+        encoder_file = '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/encoder.lua'
+        newencoder = loadfile(encoder_file)()
+        encode = newencoder()
+        folder = android_position_folder
     end
     if myos == "Windows" then
-		dkjson_file = os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\dkjson.lua'
-        dkjson = loadfile(dkjson_file)()
-        windows_folder = os.getenv("USERPROFILE") .. '\\Documents\\mpv-positions\\'
-        folder = windows_folder
+        windows_position_folder = os.getenv("USERPROFILE") .. '\\Documents\\mpv-positions\\'
+        folder = windows_position_folder
+        windows_script_folder = os.getenv("USERPROFILE") ..
+            '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\lib\\'
+        decoder_file = windows_script_folder .. "decoder.lua"
+        newdecoder = loadfile(decoder_file)()
+        decode = newdecoder()
+        encoder_file = windows_script_folder .. "encoder.lua"
+        newencoder = loadfile(encoder_file)()
+        encode = newencoder()
     end
     filepath = folder .. filename .. ".json"
     filepath = folder .. filename .. ".json"
     local positionFile, err = io.open(filepath, "r")
+
     if not positionFile then
         print("Could not open position file for reading:", err)
         return
     else
         local content, err = positionFile:read("*all")
-        local data, pos, err = dkjson.decode(content, 1, nil)
+        local data = decode(content)
         if err then
             mp.osd_message(err .. " when opening the file " .. filepath .. ". Try deleting the file", "8")
 
@@ -59,7 +75,7 @@ mp.register_event("shutdown", function()
     if position ~= nil and position > 2 then
         filename = string.gsub(filename, "[^%w%.%-_]", "_")
         myos = getOS()
-        
+
         if myos == "Windows" then
             os.execute("mkdir" .. folder)
         else
@@ -79,33 +95,35 @@ mp.register_event("shutdown", function()
         local data = {
             loc = position
         }
-        local str = dkjson.encode(data, { indent = true })
+
+        local str = encode(data)
         positionFile:write(str)
         positionFile:close()
     end
 end)
 
 
+function loadFile(path)
+    return assert(loadfile(path))()
+end
+
 function getFilename(myos)
     md5 = nil
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
-        md5_file = os.getenv("HOME") .. '/.config/mpv/scripts/md5.lua'
-        md5 = loadfile(md5_file)()
+        md5 = loadFile(os.getenv("HOME") .. '/.config/mpv/scripts/lib/md5.lua')
     end
     if myos == "Android" or myos == "Toybox" then
-        md5 = loadfile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/md5.lua')()
+        md5 = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/md5.lua')
     end
-	if myos == "Windows" then
-		md5_file = os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\md5.lua'
-        md5 = loadfile(md5_file)()
-	end
+    if myos == "Windows" then
+        md5 = loadFile(os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\lib\\md5.lua')
+    end
 
     title = mp.get_property("media-title")
     local file_format = mp.get_property("file-format")
     if string.find(file_format, "mp4") then
         file_format = ".mp4"
     end
-    local title = title .. file_format
     title = md5.sumhexa(title)
     return title
 end

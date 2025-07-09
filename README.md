@@ -27,12 +27,12 @@ A cross platform script to save a files position when using mpv or mpv android a
 
 ### Save location
 - The script should work without any changes, however you can specify the location of where the save positions of files are stored by editing the locations in 'saveposition.lua' below
-    - linux_mac_folder (default: /home/USERNAME/Documents/mpv-positions)
-    - windows_folder (default: C:\Users\USERNAME\Documents\mpv-positions)
-    - android_folder (default: /storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/)
+    - linux_mac_positions_folder (default: /home/USERNAME/Documents/mpv-positions)
+    - windows_positions_folder (default: C:\Users\USERNAME\Documents\mpv-positions)
+    - android_positions_folder (default: /storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/)
 
 ### Linux or Mac
-Copy all lua files to  /home/USERNAME/.config/mpv/scripts
+Copy 'saveposition.lua' and the folder 'lib' to /home/USERNAME/.config/mpv/scripts
 
 ### Android 
 - NOTE: Since Android version 12 Google has restricted access to the data folder where the files need to be placed so please see the guide below
@@ -52,10 +52,10 @@ Copy all lua files to  /home/USERNAME/.config/mpv/scripts
                         mpv
                             scripts
 
-- Copy the Lua files for this script to your phone (any location)
+- Clone this repository or copy 'saveposition.lua' and the folder 'lib' to your phone (any location)
 - NOTE: Using the Files App you will only be able to copy the files initially to the 'Android' foldeer
-- For each Lua file open the Files app and select each file, select the three dots on the top right and select 'copy to'
-- Copy each file to the 'Android' folder
+- For the Lua file and folder open the Files app and select each file, select the three dots on the top right and select 'copy to'
+- Copy the file and folder to the 'Android' folder
 - Then in the Files app open the Android folder
 - You should now be able to see the 'data' folder
 - Drag each Lua file from the 'Android' folder into data->is.xyz.mpv->files->.config->mpv->scripts
@@ -67,7 +67,8 @@ Copy all lua files to  /home/USERNAME/.config/mpv/scripts
     - add the following: script="/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/saveposition.lua"
 
 #### Installation guide (Rooted)
-- Copy each Lua file into data->is.xyz.mpv->files->.config->mpv->scripts
+
+- Copy 'saveposition.lua' and the folder to Android->data->is.xyz.mpv->files->.config->mpv->scripts
 - Open mpv-android
     - Press back button once
     - Go to Settings->Advanced - edit mpv.conf
@@ -83,7 +84,7 @@ Copy all lua files to  /home/USERNAME/.config/mpv/scripts
 - If you are using scoop you will need to make the 'scripts' folder. To do this:
     - Open the folder: C:\Users\USERNAME\scoop\apps\mpv\current\portable_config\
     - Create a new folder called 'scripts'
-    - In the 'scripts' folder copy all lua files from this script into this folder
+    - Either clone this repository or copy 'saveposition.lua' and the folder 'lib' into this folder
 
 
 - If you use an alternate package manager or method or installing mpv, you can edit the location of the two variables in 'saveposition.lua':
@@ -96,6 +97,7 @@ This project uses [**md5.lua**](https://github.com/kikito/md5.lua) by [@kikito](
 > md5.lua is licensed under the MIT License.  
 > https://github.com/kikito/md5.lua
 
-This project uses [**dkjson.lua**](https://github.com/LuaDist/dkjson) from [@LuaDist](https://github.com/LuaDist), a Lua module for encoding and decoding JSON data. 
-> ddkjson.lua is licensed under the MIT License.  
-> https://github.com/LuaDist/dkjson
+This project uses [**lunajson**](https://github.com/grafi-tt/lunajson) from [@grafi-tt](https://github.com/grafi-tt), A strict and fast JSON parser/decoder/encoder written in pure Lua. 
+> lunajson is licensed under the MIT License.  
+> https://github.com/grafi-tt/lunajson 
+
