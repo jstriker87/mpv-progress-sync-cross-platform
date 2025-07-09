@@ -5,7 +5,6 @@ position = 0
 isPlaying = true
 encode = nil
 mp.register_event("file-loaded", function()
-
     decode = nil
     myos = getOS()
     filename = getFilename(myos)
@@ -34,14 +33,14 @@ mp.register_event("file-loaded", function()
     if myos == "Windows" then
         windows_position_folder = os.getenv("USERPROFILE") .. '\\Documents\\mpv-positions\\'
         folder = windows_position_folder
-		windows_script_folder = os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\lib\\'
-        decoder_file = loadFile(windows_script_folder .. "decoder.lua")
+        windows_script_folder = os.getenv("USERPROFILE") ..
+            '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\lib\\'
+        decoder_file = windows_script_folder .. "decoder.lua"
         newdecoder = loadfile(decoder_file)()
         decode = newdecoder()
-        encoder_file = loadFile(windows_script_folder .. "encoder.lua")
+        encoder_file = windows_script_folder .. "encoder.lua"
         newencoder = loadfile(encoder_file)()
         encode = newencoder()
-
     end
     filepath = folder .. filename .. ".json"
     filepath = folder .. filename .. ".json"
@@ -71,13 +70,12 @@ timer = mp.add_periodic_timer(1, function()
 end)
 
 mp.register_event("shutdown", function()
-
     isPlaying = false
 
     if position ~= nil and position > 2 then
         filename = string.gsub(filename, "[^%w%.%-_]", "_")
         myos = getOS()
-        
+
         if myos == "Windows" then
             os.execute("mkdir" .. folder)
         else
@@ -117,9 +115,9 @@ function getFilename(myos)
     if myos == "Android" or myos == "Toybox" then
         md5 = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/md5.lua')
     end
-	if myos == "Windows" then
-		md5_= loadFile(os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\lib\\md5.lua')
-	end
+    if myos == "Windows" then
+        md5 = loadFile(os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\lib\\md5.lua')
+    end
 
     title = mp.get_property("media-title")
     local file_format = mp.get_property("file-format")
@@ -143,4 +141,3 @@ function getOS()
     myos = osname or "Windows"
     return myos
 end
-
