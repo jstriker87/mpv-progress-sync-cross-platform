@@ -73,10 +73,8 @@ end)
 mp.register_event("shutdown", function()
 
     isPlaying = false
-    print("Shutdown position: ", position)
 
     if position ~= nil and position > 2 then
-        print("Saving")
         filename = string.gsub(filename, "[^%w%.%-_]", "_")
         myos = getOS()
         
@@ -86,8 +84,6 @@ mp.register_event("shutdown", function()
             os.execute("mkdir -p " .. folder)
         end
         filepath = folder .. filename .. ".json"
-
-        print("Shutdown filepath: ", filepath)
         positionFile, err = io.open(filepath, "w")
         if not positionFile then
             print("Error opening file to write:", err)
@@ -103,7 +99,6 @@ mp.register_event("shutdown", function()
         }
 
         local str = encode(data)
-        print("Saving " .. str .. " to file: " .. filepath .. " with data: " .. str)
         positionFile:write(str)
         positionFile:close()
     end
@@ -132,7 +127,6 @@ function getFilename(myos)
         file_format = ".mp4"
     end
     title = md5.sumhexa(title)
-    print("MD5 Title", title)
     return title
 end
 
