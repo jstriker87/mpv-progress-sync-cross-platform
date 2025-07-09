@@ -12,20 +12,22 @@ mp.register_event("file-loaded", function()
     duration = mp.get_property_number("duration")
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
         linux_mac_position_folder = os.getenv("HOME") .. "/Documents/mpv-positions/"
-        decoder_file = os.getenv("HOME") .. '/.config/mpv/scripts/lib/decoder.lua'
+        linux_script_folder = os.getenv("HOME") .. '/.config/mpv/scripts/mpv-progress-sync/lib/'
+        decoder_file = linux_script_folder .. 'decoder.lua'
         newdecoder = loadfile(decoder_file)()
         decode = newdecoder()
-        encoder_file = os.getenv("HOME") .. '/.config/mpv/scripts/lib/encoder.lua'
+        encoder_file = linux_script_folder .. 'encoder.lua'
         newencoder = loadfile(encoder_file)()
         encode = newencoder()
         folder = linux_mac_position_folder
     end
     if myos == "Android" or myos == "Toybox" then
         android_position_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
-        decoder_file = '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/decoder.lua'
+        android_script_folder = '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/lib/'
+        decoder_file = android_script_folder .. 'decoder.lua'
         newdecoder = loadfile(decoder_file)()
         decode = newdecoder()
-        encoder_file = '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/encoder.lua'
+        decoder_file = android_script_folder .. 'encoder.lua'
         newencoder = loadfile(encoder_file)()
         encode = newencoder()
         folder = android_position_folder
@@ -34,7 +36,7 @@ mp.register_event("file-loaded", function()
         windows_position_folder = os.getenv("USERPROFILE") .. '\\Documents\\mpv-positions\\'
         folder = windows_position_folder
         windows_script_folder = os.getenv("USERPROFILE") ..
-            '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\lib\\'
+            '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\mpv-progress-sync\\lib\\'
         decoder_file = windows_script_folder .. "decoder.lua"
         newdecoder = loadfile(decoder_file)()
         decode = newdecoder()
@@ -110,13 +112,13 @@ end
 function getFilename(myos)
     md5 = nil
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
-        md5 = loadFile(os.getenv("HOME") .. '/.config/mpv/scripts/lib/md5.lua')
+        md5 = loadFile(os.getenv("HOME") .. '/.config/mpv/scripts/mpv-progress-sync/lib/md5.lua')
     end
     if myos == "Android" or myos == "Toybox" then
-        md5 = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/md5.lua')
+        md5 = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/lib/md5.lua')
     end
     if myos == "Windows" then
-        md5 = loadFile(os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\lib\\md5.lua')
+        md5 = loadFile(os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\mpv-progress-sync\\lib\\md5.lua')
     end
 
     title = mp.get_property("media-title")
