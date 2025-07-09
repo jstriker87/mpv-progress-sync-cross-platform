@@ -23,10 +23,10 @@ mp.register_event("file-loaded", function()
     end
     if myos == "Android" or myos == "Toybox" then
         android_position_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
-        decoder_file = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/decoder.lua')
+        decoder_file = '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/decoder.lua'
         newdecoder = loadfile(decoder_file)()
         decode = newdecoder()
-        encoder_file = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/encoder.lua')
+        encoder_file = '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/lib/encoder.lua'
         newencoder = loadfile(encoder_file)()
         encode = newencoder()
         folder = android_position_folder
@@ -73,8 +73,10 @@ end)
 mp.register_event("shutdown", function()
 
     isPlaying = false
+    print("Shutdown position: ", position)
 
     if position ~= nil and position > 2 then
+        print("Saving")
         filename = string.gsub(filename, "[^%w%.%-_]", "_")
         myos = getOS()
         
@@ -84,6 +86,8 @@ mp.register_event("shutdown", function()
             os.execute("mkdir -p " .. folder)
         end
         filepath = folder .. filename .. ".json"
+
+        print("Shutdown filepath: ", filepath)
         positionFile, err = io.open(filepath, "w")
         if not positionFile then
             print("Error opening file to write:", err)
@@ -97,7 +101,9 @@ mp.register_event("shutdown", function()
         local data = {
             loc = position
         }
+
         local str = encode(data)
+        print("Saving " .. str .. " to file: " .. filepath .. " with data: " .. str)
         positionFile:write(str)
         positionFile:close()
     end
@@ -125,8 +131,8 @@ function getFilename(myos)
     if string.find(file_format, "mp4") then
         file_format = ".mp4"
     end
-    local title = title .. file_format
     title = md5.sumhexa(title)
+    print("MD5 Title", title)
     return title
 end
 
