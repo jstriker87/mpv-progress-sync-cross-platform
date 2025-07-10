@@ -26,14 +26,13 @@ A cross platform script to save a files position when using mpv or mpv android a
 - Windows
 
 ### Save location
-- The script should work without any changes, however you can specify the location of where the save positions of files are stored by editing the locations in 'main.lua' below
+- The script should work without any changes, however you can specify the location of where the save positions of files are stored by editing the locations in 'saveposition.lua' below
     - linux_mac_positions_folder (default: /home/USERNAME/Documents/mpv-positions)
     - windows_positions_folder (default: C:\Users\USERNAME\Documents\mpv-positions)
     - android_positions_folder (default: /storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/)
 
 ### Linux or Mac
-
-Copy the folder 'mpv-progress-sync' to /home/USERNAME/.config/mpv/scripts
+Copy 'saveposition.lua' and the folder 'lib' to /home/USERNAME/.config/mpv/scripts
 
 ### Android 
 - NOTE: Since Android version 12 Google has restricted access to the data folder where the files need to be placed so please see the guide below
@@ -53,27 +52,27 @@ Copy the folder 'mpv-progress-sync' to /home/USERNAME/.config/mpv/scripts
                         mpv
                             scripts
 
-- Clone this repository or Copy the folder 'mpv-progress-sync' to your phone (any location)
+- Clone this repository or copy 'saveposition.lua' and the folder 'lib' to your phone (any location)
 - NOTE: Using the Files App you will only be able to copy the files initially to the 'Android' foldeer
-- Open the Files app and select the 'mpv-sync-progress' folder. Select the three dots on the top right and select 'copy to'
-- Copy the folder to the 'Android' folder
+- For the Lua file and folder open the Files app and select each file, select the three dots on the top right and select 'copy to'
+- Copy the file and folder to the 'Android' folder
 - Then in the Files app open the Android folder
 - You should now be able to see the 'data' folder
-- Drag the 'mpv-progress-sync' folder from the 'Android' folder into data->is.xyz.mpv->files->.config->mpv->scripts
+- Drag each Lua file from the 'Android' folder into data->is.xyz.mpv->files->.config->mpv->scripts
 - [General video tutorial of using the Files app with the data folder](https://www.youtube.com/watch?v=HGzRx_HxrmQ)
 
 - Open mpv-android
     - Press back button once
     - Go to Settings -> Advanced -> edit mpv.conf
-    - add the following: script="/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/main.lua"
+    - add the following: script="/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/saveposition.lua"
 
 #### Installation guide (Rooted)
 
-- Copy the 'mpv-progress-sync' folder to Android->data->is.xyz.mpv->files->.config->mpv->scripts
+- Copy 'saveposition.lua' and the folder to Android->data->is.xyz.mpv->files->.config->mpv->scripts
 - Open mpv-android
     - Press back button once
     - Go to Settings->Advanced - edit mpv.conf
-    - add the following: script="/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/main.lua"
+    - add the following: script="/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/saveposition.lua"
 
 ### Windows
 - Note: mpv can be installed in a number of different ways
@@ -85,9 +84,10 @@ Copy the folder 'mpv-progress-sync' to /home/USERNAME/.config/mpv/scripts
 - If you are using scoop you will need to make the 'scripts' folder. To do this:
     - Open the folder: C:\Users\USERNAME\scoop\apps\mpv\current\portable_config\
     - Create a new folder called 'scripts'
-    - Either clone this repository or copy the 'mpv-progress-sync' folder into this folder
+    - Either clone this repository or copy 'saveposition.lua' and the folder 'lib' into this folder
 
-- If you use an alternate package manager or method or installing mpv, you can edit the location of the two variables in 'main.lua':
+
+- If you use an alternate package manager or method or installing mpv, you can edit the location of the two variables in 'saveposition.lua':
     - dkjson_file
     - md5_file
     - The location of the mpv scripts folder when installing manually is normally: C:\Users\USERNAME\AppData\Roaming\mpv\scripts\ 
