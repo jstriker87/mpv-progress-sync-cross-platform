@@ -23,11 +23,12 @@ mp.register_event("file-loaded", function()
     end
     if myos == "Android" or myos == "Toybox" then
         android_position_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
-        android_script_folder = '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/lib/'
+        android_script_folder =
+        '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/lib/'
         decoder_file = android_script_folder .. 'decoder.lua'
         newdecoder = loadfile(decoder_file)()
         decode = newdecoder()
-        decoder_file = android_script_folder .. 'encoder.lua'
+        encoder_file = android_script_folder .. 'encoder.lua'
         newencoder = loadfile(encoder_file)()
         encode = newencoder()
         folder = android_position_folder
@@ -115,18 +116,23 @@ function getFilename(myos)
         md5 = loadFile(os.getenv("HOME") .. '/.config/mpv/scripts/mpv-progress-sync/lib/md5.lua')
     end
     if myos == "Android" or myos == "Toybox" then
-        md5 = loadFile('/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/lib/md5.lua')
+        md5 = loadFile(
+            '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/lib/md5.lua')
     end
     if myos == "Windows" then
-        md5 = loadFile(os.getenv("USERPROFILE") .. '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\mpv-progress-sync\\lib\\md5.lua')
+        md5 = loadFile(os.getenv("USERPROFILE") ..
+            '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\mpv-progress-sync\\lib\\md5.lua')
     end
 
     title = mp.get_property("media-title")
+    print("title: ", title)
     local file_format = mp.get_property("file-format")
     if string.find(file_format, "mp4") then
         file_format = ".mp4"
     end
     title = md5.sumhexa(title)
+
+    print("Hashed title: ", title)
     return title
 end
 
