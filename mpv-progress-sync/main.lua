@@ -11,15 +11,15 @@ mp.register_event("file-loaded", function()
     filename = string.gsub(filename, "[^%w%.%-_]", "_")
     duration = mp.get_property_number("duration")
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
-        linux_mac_position_folder = os.getenv("HOME") .. "/Documents/mpv-positions/"
-        linux_script_folder = os.getenv("HOME") .. '/.config/mpv/scripts/mpv-progress-sync/lib/'
-        decoder_file = linux_script_folder .. 'decoder.lua'
-        newdecoder = loadfile(decoder_file)()
-        decode = newdecoder()
-        encoder_file = linux_script_folder .. 'encoder.lua'
-        newencoder = loadfile(encoder_file)()
-        encode = newencoder()
-        folder = linux_mac_position_folder
+        linux_mac_position_folder = os.getenv("HOME") .. '/.config/mpv/mpv-postions/'
+        linux_script_folder       = os.getenv("HOME") .. '/.config/mpv/scripts/mpv-progress-sync/lib/'
+        decoder_file              = linux_script_folder .. 'decoder.lua'
+        newdecoder                = loadfile(decoder_file)()
+        decode                    = newdecoder()
+        encoder_file              = linux_script_folder .. 'encoder.lua'
+        newencoder                = loadfile(encoder_file)()
+        encode                    = newencoder()
+        folder                    = linux_mac_position_folder
     end
     if myos == "Android" or myos == "Toybox" then
         android_position_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
@@ -34,7 +34,8 @@ mp.register_event("file-loaded", function()
         folder = android_position_folder
     end
     if myos == "Windows" then
-        windows_position_folder = os.getenv("USERPROFILE") .. '\\Documents\\mpv-positions\\'
+        windows_position_folder = os.getenv("USERPROFILE") ..
+            '\\scoop\\apps\\mpv\\current\\portable_config\\mpv-positions\\'
         folder = windows_position_folder
         windows_script_folder = os.getenv("USERPROFILE") ..
             '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\mpv-progress-sync\\lib\\'
@@ -125,13 +126,9 @@ function getFilename(myos)
     end
 
     title = mp.get_property("media-title")
-    print("title: ", title)
+    print("Oroginal title: ", title)
     local file_format = mp.get_property("file-format")
-    if string.find(file_format, "mp4") then
-        file_format = ".mp4"
-    end
     title = md5.sumhexa(title)
-
     print("Hashed title: ", title)
     return title
 end
