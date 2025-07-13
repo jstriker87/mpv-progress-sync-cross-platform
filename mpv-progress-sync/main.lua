@@ -81,7 +81,7 @@ mp.register_event("shutdown", function()
         myos = getOS()
 
         if myos == "Windows" then
-            os.execute("mkdir" .. folder)
+            os.execute("mkdir " .. folder)
         else
             os.execute("mkdir -p " .. folder)
         end
