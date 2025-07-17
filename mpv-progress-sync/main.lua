@@ -22,7 +22,7 @@ mp.register_event("file-loaded", function()
     -- If the operating system is either Linux or Mac
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
         -- Set folder to save position of files and the script folder location itself
-        linux_mac_position_folder = os.getenv("HOME") .. '/.config/mpv/mpv-postions/'
+        linux_mac_position_folder = os.getenv("HOME") .. '/.config/mpv/mpv-positions/'
         linux_script_folder       = os.getenv("HOME") .. '/.config/mpv/scripts/mpv-progress-sync/lib/'
         -- Import decoder from from lunajson , call loadFile to open the file and then create a new decoder object
         decoder_file              = linux_script_folder .. 'decoder.lua'
