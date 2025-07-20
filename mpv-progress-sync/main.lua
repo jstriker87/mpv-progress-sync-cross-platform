@@ -40,7 +40,7 @@ mp.register_event("file-loaded", function()
         -- Set folder to save position of files and the script folder location itself
         android_position_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
         android_script_folder =
-        '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/lib/'
+        '/storage/emulated/0/Android/media/is.xyz.mpv/mpv-progress-sync/lib/'
         -- Import decoder from from lunajson , call loadFile to open the file and then create a new decoder object
         decoder_file = android_script_folder .. 'decoder.lua'
         newdecoder = loadfile(decoder_file)()
@@ -108,7 +108,9 @@ mp.register_event("shutdown", function()
     -- If the position is not nill and it is greater than 2 seconds 
     if position ~= nil and position > 2 then
         -- Sanitise the filename to remove escape characters
+        print("Temp filename 1: ",filename)
         filename = string.gsub(filename, "[^%w%.%-_]", "_")
+        print("Temp filename 2: ",filename)
         -- Get current OS
         myos = getOS()
 
@@ -121,6 +123,8 @@ mp.register_event("shutdown", function()
         -- Create the filepath to save the position 
         filepath = folder .. filename .. ".json"
         -- Open tthe file 
+
+        print("Saving filepath: ",filepath)
         positionFile, err = io.open(filepath, "w")
         if not positionFile then
             print("Error opening file to write:", err)
@@ -162,7 +166,7 @@ function getFilename(myos)
     end
     if myos == "Android" or myos == "Toybox" then
         md5 = loadFile(
-            '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/lib/md5.lua')
+            '/storage/emulated/0/Android/media/is.xyz.mpv/mpv-progress-sync/lib/md5.lua')
     end
     if myos == "Windows" then
         md5 = loadFile(os.getenv("USERPROFILE") ..
@@ -170,8 +174,17 @@ function getFilename(myos)
     end
     -- Get the title of the opened file in mpv
     title = mp.get_property("media-title")
+    print("Original title: ",title)
+    local filename = mp.get_property("filename")
+    print("Temp title 1: ",filename)
+    local stream_filename = mp.get_property("stream-open-filename")
+    print("Temp title 2: ",stream_filename)
+    local meta_title = mp.get_property("metadata/by-key/title")
+    print("Temp title 3: ",meta_title)
+
     -- Use the md5 function to create a hash of the filename 
     title = md5.sumhexa(title)
+    print("Hashed title: ",title)
     -- Return the hashed title
     return title
 end

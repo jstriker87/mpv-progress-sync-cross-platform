@@ -58,46 +58,23 @@ Copy the folder 'mpv-progress-sync' to /hom:e/USERNAME/.config/mpv/scripts
   - The location of the mpv scripts folder when installing manually (e.g. not using Scoop) is normally: C:\Users\USERNAME\AppData\Roaming\mpv\scripts\
 
 ### Android
-
-- NOTE: Since Android version 12 Google has restricted access to the data folder where the files need to be placed so please see the guide below
-
 #### Installation guide (non-rooted)
-
-- In the Google Play Store install the files app by Marc apps & software [Files app (Play Store)](https://play.google.com/store/apps/details?id=com.marc.files)
-
-- Open the files App and navigate to /storage/emulated/0/Android/data/is.xyz.mpv/files/
-- In this folder create the folders .config->mpv->scripts
-
-  - The folder structure will look like this:
-    Android
-    data
-    is.xyz.mpv
-    files
-    .config
-    mpv
-    scripts
-
+- Open your files App and navigate to /storage/emulated/0/Android/media/is.xyz.mpv/
 - Clone this repository or Copy the folder 'mpv-progress-sync' to your phone (any location)
-- NOTE: Using the Files App you will only be able to copy the files initially to the 'Android' folder
 - Open the Files app and select the 'mpv-sync-progress' folder. Select the three dots on the top right and select 'copy to'
-- Copy the folder to the 'Android' folder
-- Then in the Files app open the Android folder
-- You should now be able to see the 'data' folder
-- Drag each Lua file from the 'Android' folder into data->is.xyz.mpv->files->.config->mpv->scripts
-- [General video tutorial of using the Files app with the data folder](https://www.youtube.com/watch?v=HGzRx_HxrmQ)
+- Copy the folder to /storage/emulated/0/Android/media/is.xyz.mpv/
 
 - Open mpv-android
   - Press back button once
   - Go to Settings -> Advanced -> edit mpv.conf
-  - add the following: script="/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/main.lua"
+  - add the following: script="/storage/emulated/0/Android/media/is.xyz.mpv/mpv-progress-sync/main.lua"
 
 #### Installation guide (Rooted)
-
-- Copy the folder mpv-progress-sync' to Android->data->is.xyz.mpv->files->.config->mpv->scripts
+- Copy the folder mpv-progress-sync' to Android->media->is.xyz.mpv
 - Open mpv-android
   - Press back button once
   - Go to Settings->Advanced - edit mpv.conf
-  - add the following: script="/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/main.lua"
+  - add the following: script="/storage/emulated/0/Android/media/mpv-progress-sync/main.lua"
 
 ## Dependencies / Acknowledgements
 
