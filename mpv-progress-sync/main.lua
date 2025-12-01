@@ -1,4 +1,4 @@
--- Global variables ysed in different functions, so have to be declared globally
+-- Global variables below are used in different functions, so have to be declared globally
 filepath = ''
 folder = ''
 duration = 0
@@ -108,9 +108,7 @@ mp.register_event("shutdown", function()
     -- If the position is not nill and it is greater than 2 seconds 
     if position ~= nil and position > 2 then
         -- Sanitise the filename to remove escape characters
-        print("Temp filename 1: ",filename)
         filename = string.gsub(filename, "[^%w%.%-_]", "_")
-        print("Temp filename 2: ",filename)
         -- Get current OS
         myos = getOS()
 
@@ -172,21 +170,15 @@ function getFilename(myos)
         md5 = loadFile(os.getenv("USERPROFILE") ..
             '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\mpv-progress-sync\\lib\\md5.lua')
     end
-    -- Get the title of the opened file in mpv
-    title = mp.get_property("media-title")
-    print("Original title: ",title)
-    local filename = mp.get_property("filename")
-    print("Temp title 1: ",filename)
-    local stream_filename = mp.get_property("stream-open-filename")
-    print("Temp title 2: ",stream_filename)
-    local meta_title = mp.get_property("metadata/by-key/title")
-    print("Temp title 3: ",meta_title)
-
+    -- Get the file size and duration of the opened file in mpv
+    local file_size = mp.get_property_number("file-size")
+    local duration = mp.get_property_number("duration")
+    -- Add the combination of the values together and convert to a string
+    local file_descriptor = tostring(file_size + duration)
     -- Use the md5 function to create a hash of the filename 
-    title = md5.sumhexa(title)
-    print("Hashed title: ",title)
-    -- Return the hashed title
-    return title
+    local fd = md5.sumhexa(file_descriptor)
+    -- Return the hashed file descriptor
+    return fd
 end
 
 

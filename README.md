@@ -4,14 +4,14 @@ A cross platform script to save a files position when using mpv or mpv android a
 
 ## Background
 
-- mpv does have save position option which can be set by adding '--save-position-on-quit' to mpv.conf
-- However the issue is that the way in which this is carried out is specific to where the location was stored.
-- If you have 'file.mp4' in your /home/Downloads folder and you also have 'file.mp4' in /home/Documents when you play the first file and then re-open the second file the progress will not be up to date
-  - The progress is stored for each of these two files
-- This also means that saving the location across devices will not work (due to the hashing process mpv uses to store the file location and name)
+- mpv does have an option to the save position option which can be set by adding '--save-position-on-quit' to mpv.conf
+- However the issue is that the way in which this is stored  is specific to where the location was stored.
+    - If you open the 'file.mp4' in mpv which is in your /home/Downloads folder and move the same file to /home/Documents, when you open this file again  the progress will not be up to date
+        - The progress is stored for each of these two files
+        - This also means that saving the location across devices will not work (due to the hashing process mpv uses to store the file location and name)
 
-- This script solves this problem by only using the filename being opened
-- The script stores the names of the files being opened using a hashing process so the names of the saved location files are private
+- This script solves this problem by only using the combination of the files size and duration of the opened file
+- The script stores the names of this combination using a hashing process so the names of the saved location files are private
 - Note: To sync across devices you need to use an appropriate sync program. You can synchronise your different devices folders that store your media files progress in mpv that store your save positions using sync services such as [Syncthing](https://syncthing.net/)
   - This allows you to sync your progress of a media file in mpv very easily
 
@@ -35,7 +35,7 @@ A cross platform script to save a files position when using mpv or mpv android a
 
 ### Linux or Mac
 
-Copy the folder 'mpv-progress-sync' to /hom:e/USERNAME/.config/mpv/scripts
+Copy the folder 'mpv-progress-sync' to /home/USERNAME/.config/mpv/scripts
 
 ### Windows
 
