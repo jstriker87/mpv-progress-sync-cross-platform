@@ -1,4 +1,4 @@
--- Global variables ysed in different functions, so have to be declared globally
+-- Global variables below are used in different functions, so have to be declared globally
 filepath = ''
 folder = ''
 duration = 0
@@ -40,7 +40,7 @@ mp.register_event("file-loaded", function()
         -- Set folder to save position of files and the script folder location itself
         android_position_folder = "/storage/emulated/0/Android/media/is.xyz.mpv/mpv-positions/"
         android_script_folder =
-        '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/lib/'
+        '/storage/emulated/0/Android/media/is.xyz.mpv/mpv-progress-sync/lib/'
         -- Import decoder from from lunajson , call loadFile to open the file and then create a new decoder object
         decoder_file = android_script_folder .. 'decoder.lua'
         newdecoder = loadfile(decoder_file)()
@@ -121,6 +121,8 @@ mp.register_event("shutdown", function()
         -- Create the filepath to save the position 
         filepath = folder .. filename .. ".json"
         -- Open tthe file 
+
+        print("Saving filepath: ",filepath)
         positionFile, err = io.open(filepath, "w")
         if not positionFile then
             print("Error opening file to write:", err)
@@ -162,18 +164,21 @@ function getFilename(myos)
     end
     if myos == "Android" or myos == "Toybox" then
         md5 = loadFile(
-            '/storage/emulated/0/Android/data/is.xyz.mpv/files/.config/mpv/scripts/mpv-progress-sync/lib/md5.lua')
+            '/storage/emulated/0/Android/media/is.xyz.mpv/mpv-progress-sync/lib/md5.lua')
     end
     if myos == "Windows" then
         md5 = loadFile(os.getenv("USERPROFILE") ..
             '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\mpv-progress-sync\\lib\\md5.lua')
     end
-    -- Get the title of the opened file in mpv
-    title = mp.get_property("media-title")
+    -- Get the file size and duration of the opened file in mpv
+    local file_size = mp.get_property_number("file-size")
+    local duration = mp.get_property_number("duration")
+    -- Add the combination of the values together and convert to a string
+    local file_descriptor = tostring(file_size + duration)
     -- Use the md5 function to create a hash of the filename 
-    title = md5.sumhexa(title)
-    -- Return the hashed title
-    return title
+    local fd = md5.sumhexa(file_descriptor)
+    -- Return the hashed file descriptor
+    return fd
 end
 
 
