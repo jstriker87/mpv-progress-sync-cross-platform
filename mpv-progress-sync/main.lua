@@ -170,6 +170,16 @@ function getFilename(myos)
         md5 = loadFile(os.getenv("USERPROFILE") ..
             '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\mpv-progress-sync\\lib\\md5.lua')
     end
+
+    -- Check 'force-media-title' to determine if it is a youtube video
+    local title = mp.get_property("force-media-title")
+    -- If it is a YT video then use the YT video's title
+    if title and #title > 0 then
+        local fd = md5.sumhexa(title)
+        print("Hashed title file descriptor: ",fd)
+        -- Return the hashed title descriptor
+        return fd
+    end
     -- Get the file size and duration of the opened file in mpv
     local file_size = mp.get_property_number("file-size")
     local duration = mp.get_property_number("duration")
@@ -177,12 +187,13 @@ function getFilename(myos)
     local file_descriptor = tostring(file_size + duration)
     -- Use the md5 function to create a hash of the filename 
     local fd = md5.sumhexa(file_descriptor)
-    -- Return the hashed file descriptor
+    print("Hashed file size and duration file descriptor: ",fd)
+    -- Return the hashed file size and duration descriptor
     return fd
 end
 
 
--- Heleer function to get the users operating system
+-- Helper function to get the users operating system
 function getOS()
     if jit then
         return jit.os
