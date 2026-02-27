@@ -157,6 +157,15 @@ end
 -- Help function to get the filename of a file. Parameter is the operating system of the user
 function getFilename(myos)
 
+
+    local duration = math.floor(mp.get_property_number("duration"))
+    --local date = mp.get_property("filtered-metadata/by-key/Date")
+    --if not date
+    --then
+    --    date = 0
+    --else
+    --end
+
     -- Open the md5 function from kikito, dependent on the operating system being used, This function is used to create a hash of the opened files filename
     md5 = nil
     if myos == 'GNU/Linux' or myos == 'OSX' or myos == 'Darwin' then
@@ -170,25 +179,12 @@ function getFilename(myos)
         md5 = loadFile(os.getenv("USERPROFILE") ..
             '\\scoop\\apps\\mpv\\current\\portable_config\\scripts\\mpv-progress-sync\\lib\\md5.lua')
     end
+    print("duration",duration)
+    --print("date",date)
 
-    -- Check 'force-media-title' to determine if it is a youtube video
-    local title = mp.get_property("force-media-title")
-    -- If it is a YT video then use the YT video's title
-    if title and #title > 0 then
-        local fd = md5.sumhexa(title)
-        print("Hashed title file descriptor: ",fd)
-        -- Return the hashed title descriptor
-        return fd
-    end
-    -- Get the file size and duration of the opened file in mpv
-    local file_size = mp.get_property_number("file-size")
-    local duration = mp.get_property_number("duration")
-    -- Add the combination of the values together and convert to a string
-    local file_descriptor = tostring(file_size + duration)
-    -- Use the md5 function to create a hash of the filename 
-    local fd = md5.sumhexa(file_descriptor)
-    print("Hashed file size and duration file descriptor: ",fd)
-    -- Return the hashed file size and duration descriptor
+
+    --local pre_hash = tostring(duration + date)
+    local fd = md5.sumhexa(duration)
     return fd
 end
 
